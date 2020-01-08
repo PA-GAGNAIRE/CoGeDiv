@@ -47,9 +47,9 @@ rule index_reference:
 	message:
 		"Index reference: {wildcards.species}"
 	shell:
-		"bwa index"
-		"-p {output.index_name}"
-		"-a bwtsw"
+		"bwa index "
+		"-p {output.index_name} "
+		"-a bwtsw "
 		"{input.ref}"
 
 rule reference_mapping:
