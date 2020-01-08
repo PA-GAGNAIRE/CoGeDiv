@@ -1,3 +1,10 @@
+'''
+Pierre Barry
+Map paired-end reads to reference genome and perform variant calling
+-----------------------------------------------------------------------
+
+
+
 ### FUNCTION
 
 def get_input_gvcf(species):
