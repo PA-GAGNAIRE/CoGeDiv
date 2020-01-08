@@ -3,6 +3,11 @@ Pierre Barry
 Map paired-end reads to reference genome and perform variant calling
 -----------------------------------------------------------------------
 
+Requirements:
+
+Usage: 
+
+'''
 
 
 ### FUNCTION
