@@ -15,7 +15,7 @@ snakemake \
 '''
 
 
-### FUNCTION
+### FUNCTIONS
 
 def get_input_gvcf(species):
 	SAMPLES_sp=[SAMPLES[i] for i in range(len(SAMPLES)) if SAMPLES[i][0:5]=="species"]
@@ -37,7 +37,7 @@ def get_input_recal_gvcf(species):
          for line in L:
              np.savetxt(f, line, fmt='%s', delimiter=";")
 			 
-###### Rules BWA-mem
+###### RULES BWA-mem
 
 rule index_reference:
 	input:
@@ -45,11 +45,11 @@ rule index_reference:
 	output: 
 		index_name="{species}_cogediv"		
 	message:
-		"Index reference : {wildcards.species}"
+		"Index reference: {wildcards.species}"
 	shell:
-		"bwa index "
-		"-p {output.index_name} "
-		"-a bwtsw "
+		"bwa index"
+		"-p {output.index_name}"
+		"-a bwtsw"
 		"{input.ref}"
 
 rule reference_mapping:
@@ -60,28 +60,28 @@ rule reference_mapping:
 	output:
 		align_sam="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align.sam"
 	message:
-		"Reference mapping : {wildcards.sample}"
+		"Reference mapping: {wildcards.sample}"
 	shell : 
-		"bwa mem "
-		"-M "
-		"-t 16 "
-		"{input.ref} "
-		"{input.fastp_R1} "
-		"{input.fastp_R2} "
+		"bwa mem"
+		"-M"
+		"-t 16"
+		"{input.ref}"
+		"{input.fastp_R1}"
+		"{input.fastp_R2}"
 		"> {output.align_sam}"
-		
+
 rule samtools_convert_sam_bam:
 	input:
 		align_sam="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align.sam"
 	output:
 		align_bam="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align.bam"
 	message:
-		"Convert sam to bam : {wildcards.sample}"
+		"Convert sam to bam: {wildcards.sample}"
 	shell : 
-		"samtools " 
-		"view "
-		"{input.align_sam} "
-		"-bS "
+		"samtools" 
+		"view"
+		"{input.align_sam}"
+		"-bS"
 		"-o {output.align_bam}"
 
 rule samtools_sort:
@@ -90,12 +90,12 @@ rule samtools_sort:
 	output:
 		align_bam_sorted="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align_sorted.bam"
 	message:
-		"Sort bam : {wildcards.sample}"
+		"Sort bam: {wildcards.sample}"
 	shell : 
-		"samtools " 
-		"sort "
-		"-bS "
-		"{input.align_bam} "
+		"samtools" 
+		"sort"
+		"-bS"
+		"{input.align_bam}"
 		"-o {output.align_bam_sorted}"		
 
 rule samtools_fixmate:
@@ -104,11 +104,11 @@ rule samtools_fixmate:
 	output:
 		touch("samtools_fixmate.done")
 	message:
-		"Fixmate bam : {wildcards.sample}"
+		"Fixmate bam: {wildcards.sample}"
 	shell : 
-		"samtools " 
-		"fixmate "
-		"-m "
+		"samtools" 
+		"fixmate"
+		"-m"
 		"{input.align_bam_sorted}"	
 
 rule samtools_markduplicate:
@@ -117,43 +117,43 @@ rule samtools_markduplicate:
 	output:
 		align_bam_sorted_dedup="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align_sorted_dedup.bam"
 	message:
-		"Mark duplicates : {wildcards.sample}"
+		"Mark duplicates: {wildcards.sample}"
 	shell : 
-		"samtools " 
-		"markdup "
+		"samtools"
+		"markdup"
 		"-r " # remove duplicate reads
 		"-S " # mark supplementary reads of duplicates as duplicates
 		"-s " # print some summary stats
 		"{input.align_bam_sorted} "
 		"{output.align_bam_sorted_dedup}"	
-		
+
 rule samtools_stats:
 	input:
 		align_bam_sorted_dedup="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_align_sorted_dedup.bam"
 	output:
 		samtools_stats="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_samtools_stats.txt"
 	message:
-		"Samtools stats : {wildcards.sample}"
-	shell : 
-		"samtools " 
-		"stats "
-		"{input.align_bam_sorted_dedup} > "
+		"Samtools stats: {wildcards.sample}"
+	shell: 
+		"samtools" 
+		"stats"
+		"{input.align_bam_sorted_dedup} >"
 		"{output.samtools_stats}"
-		
+
 rule plot_bamstats:
 	input:
 		samtools_stats="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_samtools_stats.txt"
 	output:
 		plot_samtools="/share/tycho_poolz1/pagagnaire/COGEDIV/pbarry/{species}/Mapping/{sample}_plotsamtools"
 	message:
-		"Plot bamstats : {wildcards.sample}"
+		"Plot bamstats: {wildcards.sample}"
 	shell:
-		"plot-bamstats "
-		"-p "
-		"{output.plot_samtools} "
-		"{input.samtools_stats} "
+		"plot-bamstats"
+		"-p"
+		"{output.plot_samtools}"
+		"{input.samtools_stats}"
 
-### GATK
+### RULES GATK
 	
 rule generate_gvcf_first:
 	input:
