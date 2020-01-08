@@ -5,9 +5,10 @@ Map paired-end reads to reference genome and perform variant calling
 -----------------------------------------------------------------------
 
 Requirements:
+BWA-mem
+
 
 Usage: 
-
 snakemake \
 	--snakefile VariantCalling.snakefile \
 
@@ -36,7 +37,8 @@ def get_input_recal_gvcf(species):
          for line in L:
              np.savetxt(f, line, fmt='%s', delimiter=";")
 			 
-###### BWA - MEM
+###### Rules BWA-mem
+
 rule index_reference:
 	input:
 		ref=".../ref_{species}.fa"
