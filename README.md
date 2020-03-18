@@ -1,3 +1,3 @@
 # CoGeDiv
 
-ISEM Repository for ANR project HotRec 
+ISEM Repository for ANR project CoGeDiv 
